@@ -1,0 +1,35 @@
+{
+  "name": "pennyblack/pennyblack",
+  "description": "Provides integration with Penny Black for Magento2",
+  "version": "0.1.0",
+  "type": "magento2-module",
+  "authors": [
+    {
+      "name": "Penny Black",
+      "email": "engineers@pennyblack.io"
+    }
+  ],
+  "require": {
+    "php": "~7.4.0",
+    "pennyblack/php-api-client": "^0.1.0"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:pennyblack-io/php-api-client.git"
+    }
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-0": {
+      "PennyBlack\\": "src"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "optimize-autoloader": true,
+    "prepend-autoloader": false
+  }
+}

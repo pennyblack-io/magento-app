@@ -12,4 +12,3 @@ This app has been developed against the 2.4.x version of [Magento Open Source](h
 ### Magento
 
 * `composer require pennyblack/pennyblack`
-
