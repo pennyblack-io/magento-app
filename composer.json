@@ -11,9 +11,16 @@
   ],
   "require": {
     "php": "~7.4.0",
+    "magento/framework": "^103.0",
+    "magento/module-backend": "^102.0",
+    "magento/module-store": "^101.1",
     "pennyblack/php-api-client": "^0.1.0"
   },
   "repositories": [
+    {
+      "type": "composer",
+      "url": "https://repo.magento.com/"
+    },
     {
       "type": "vcs",
       "url": "git@github.com:pennyblack-io/php-api-client.git"
@@ -23,13 +30,18 @@
     "files": [
       "registration.php"
     ],
-    "psr-0": {
-      "PennyBlack\\": "src"
+    "psr-4": {
+      "PennyBlack\\PennyBlack\\": ""
     }
   },
   "config": {
+    "bin-dir": "bin",
+    "use-include-path": true,
     "preferred-install": "dist",
     "optimize-autoloader": true,
-    "prepend-autoloader": false
+    "prepend-autoloader": false,
+    "allow-plugins": {
+      "magento/composer-dependency-version-audit-plugin": true
+    }
   }
 }
