@@ -2,12 +2,16 @@
 
 namespace PennyBlack\PennyBlack\Observer;
 
+use Exception;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Store\Model\Store;
+use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
 use PennyBlack\Api as PennyBlackApi;
 use PennyBlack\Client\PennyBlackClient;
+use Psr\Log\LoggerInterface;
 
 class ConfigSaveObserver implements ObserverInterface
 {
@@ -16,11 +20,13 @@ class ConfigSaveObserver implements ObserverInterface
 
     private ScopeConfigInterface $config;
     private StoreManagerInterface $storeManager;
+    private LoggerInterface $logger;
 
-    public function __construct(ScopeConfigInterface $config, StoreManagerInterface $storeManager)
+    public function __construct(ScopeConfigInterface $config, StoreManager $storeManager, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->storeManager = $storeManager;
+        $this->logger = $logger;
     }
 
     public function execute(Observer $observer)
@@ -35,9 +41,14 @@ class ConfigSaveObserver implements ObserverInterface
                 )
             );
 
-            $store = $this->storeManager->getStore()->getBaseUrl();
+            try {
+                /** @var Store $store */
+                $store = $this->storeManager->getStore();
 
-            $api->install($this->storeManager->getStore()->getBaseUrl());
+                $api->install($store->getBaseUrl());
+            } catch (Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
         }
     }
 }

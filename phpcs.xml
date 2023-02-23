@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ruleset>
+    <rule ref="PSR12"/>
+
+    <file>./Observer</file>
+
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
+        <properties>
+            <property name="ignoreBlankLines" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="PSR12.Files.FileHeader.SpacingAfterBlock">
+        <exclude-pattern>*.php</exclude-pattern>
+    </rule>
+
+    <arg name="extensions" value="php" />
+    <arg name="report" value="full" />
+    <arg value="s" />
+</ruleset>
