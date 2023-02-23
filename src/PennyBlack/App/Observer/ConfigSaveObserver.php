@@ -30,11 +30,10 @@ class ConfigSaveObserver implements ObserverInterface
         $changedConfigPaths = $observer->getData('changed_paths') ?? [];
 
         if (in_array(self::API_KEY_CONFIG_PATH, $changedConfigPaths)) {
-            $client = $this->client->getApiClient();
-
             try {
                 /** @var Store $store */
                 $store = $this->storeManager->getStore();
+                $client = $this->client->getApiClient();
 
                 $client->install($store->getBaseUrl());
             } catch (Exception $e) {

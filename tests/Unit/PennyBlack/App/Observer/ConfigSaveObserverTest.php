@@ -9,6 +9,7 @@ use Magento\Store\Model\StoreManager;
 use Magento\Store\Model\StoreManagerInterface;
 use PennyBlack\Api as PennyBlackApi;
 use PennyBlack\App\ApiConnector\Client;
+use PennyBlack\App\Exception\MissingApiConfigException;
 use PennyBlack\App\Observer\ConfigSaveObserver;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -101,6 +102,25 @@ class ConfigSaveObserverTest extends TestCase
         $mockStore = $this->createMock(Store::class);
         $mockStore->expects($this->exactly(0))->method('getBaseUrl');
         $this->mockStoreManager->method('getStore')->willThrowException(new Exception("oops"));
+
+        /** @var MockObject|Observer $observer */
+        $observer = $this->createStub(Observer::class);
+        $observer->method('getData')->willReturn(['pennyblack/general/api_key']);
+
+        $this->mockLogger->expects($this->exactly(1))->method('error')->with("oops");
+
+        $configSaveObserver = new ConfigSaveObserver($this->mockClient, $this->mockStoreManager, $this->mockLogger);
+        $configSaveObserver->execute($observer);
+    }
+
+    public function testItLogsAnErrorIfApiConfigIsNotFound(): void
+    {
+        $this->mockClient->method('getApiClient')
+            ->willThrowException(new MissingApiConfigException("oops"));
+
+        $mockStore = $this->createMock(Store::class);
+        $mockStore->method('getBaseUrl')->willReturn('https://my-store.com');
+        $this->mockStoreManager->method('getStore')->willReturn($mockStore);
 
         /** @var MockObject|Observer $observer */
         $observer = $this->createStub(Observer::class);
