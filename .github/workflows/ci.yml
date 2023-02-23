@@ -1,0 +1,28 @@
+name: Magento App CI
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  php-tests:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        php: ['7.4', '8.0', '8.1']
+    name: run tests @${{ matrix.php }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+      - uses: php-actions/composer@v6
+        with:
+          env:
+            COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
+          ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_PUBLIC_KEY }}
+          php_version: ${{ matrix.php }}
+          version: "2.2"
+      - run: "composer quality-check"
+      - run: "composer unit-test"
