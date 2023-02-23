@@ -1,5 +1,5 @@
 {
-  "name": "pennyblack/pennyblack",
+  "name": "pennyblack/app",
   "description": "Provides integration with Penny Black for Magento2",
   "version": "0.1.0",
   "type": "magento2-module",
@@ -19,7 +19,8 @@
   "require-dev": {
     "squizlabs/php_codesniffer": "^3.7",
     "phpstan/phpstan": "^1.10",
-    "phpmd/phpmd": "^2.13"
+    "phpmd/phpmd": "^2.13",
+    "phpunit/phpunit": "^9.6"
   },
   "repositories": [
     {
@@ -33,10 +34,10 @@
   ],
   "autoload": {
     "files": [
-      "registration.php"
+      "src/PennyBlack/App/registration.php"
     ],
     "psr-4": {
-      "PennyBlack\\PennyBlack\\": ""
+      "": "src/"
     }
   },
   "config": {
@@ -50,13 +51,14 @@
     }
   },
   "scripts": {
+    "unit-test": "./bin/phpunit tests/",
     "quality-check": [
       "@phpcs",
       "@phpstan",
       "@phpmd"
     ],
     "phpcs": "./bin/phpcs",
-    "phpmd": "./bin/phpmd ./Observer text ./phpmd.xml",
+    "phpmd": "./bin/phpmd ./src text ./phpmd.xml",
     "phpstan": "./bin/phpstan analyse -c phpstan.neon"
   }
 }

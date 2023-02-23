@@ -3,7 +3,7 @@
 <ruleset>
     <rule ref="PSR12"/>
 
-    <file>./Observer</file>
+    <file>./src</file>
 
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
         <properties>

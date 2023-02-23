@@ -21,3 +21,4 @@ jobs:
           php_version: "7.4.33"
           version: "2.2"
       - run: "composer quality-check"
+      - run: "composer unit-test"

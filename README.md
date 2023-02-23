@@ -18,7 +18,7 @@ This app has been developed against the 2.4.x version of [Magento Open Source](h
 
 If you are installing this module into your Magento shop, then you can install via composer:
 
-* `composer require pennyblack/pennyblack`
+* `composer require pennyblack/app`
 
 ## Development
 
