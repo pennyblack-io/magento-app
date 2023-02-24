@@ -3,7 +3,7 @@
 namespace PennyBlack\App\Mapper;
 
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\GiftMessage\Model\OrderRepository;
+use Magento\GiftMessage\Model\OrderRepository as GiftMessageRepository;
 use Magento\Sales\Model\Order;
 use PennyBlack\App\Provider\ProductTitlesProvider;
 use PennyBlack\App\Provider\SkusProvider;
@@ -13,16 +13,16 @@ class OrderDetailsMapper
 {
     private SkusProvider $skusProvider;
     private ProductTitlesProvider $productTitlesProvider;
-    private OrderRepository $orderGiftMessageRepository;
+    private GiftMessageRepository $giftMessageRepository;
 
     public function __construct(
         SkusProvider $skusProvider,
         ProductTitlesProvider $productTitlesProvider,
-        OrderRepository $orderGiftMessageRepository
+        GiftMessageRepository $giftMessageRepository
     ) {
         $this->skusProvider = $skusProvider;
         $this->productTitlesProvider = $productTitlesProvider;
-        $this->orderGiftMessageRepository = $orderGiftMessageRepository;
+        $this->giftMessageRepository = $giftMessageRepository;
     }
 
     public function map(Order $order): PennyBlackOrderDetails
@@ -51,7 +51,7 @@ class OrderDetailsMapper
     private function getGiftMessage(Order $order): string
     {
         try {
-            $message = $this->orderGiftMessageRepository->get($order->getGiftMessageId());
+            $message = $this->giftMessageRepository->get($order->getId());
 
             return $message->getMessage();
         } catch (NoSuchEntityException $e) {

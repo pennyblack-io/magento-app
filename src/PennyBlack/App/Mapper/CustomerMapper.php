@@ -29,23 +29,32 @@ class CustomerMapper
 
     public function map(Order $order): PennyBlackCustomer
     {
+        // If customer is a guest this is null, but we can get details from the billing address.
+        // @TODO Check if this is an instance of Data/Customer!
         $customer = $order->getCustomer();
         $billingAddress = $order->getBillingAddress();
+
         $email = $customer ? $customer->getEmail() : $billingAddress->getEmail();
 
-        $store = $order->getStore();
-        $locale = $this->scopeConfig->getValue(self::LOCALE_CONFIG_PATH, ScopeInterface::SCOPE_STORE, $store->getId());
-
         return PennyBlackCustomer::fromValues(
-            $customer ? $customer->getId() : 1,
+            $customer ? $customer->getId() : null,
             $customer ? $customer->getFirstName() : $billingAddress->getFirstname(),
             $customer ? $customer->getLastname() : $billingAddress->getLastName(),
             $email,
-            $locale ?? '',
+            $this->getLocale($order) ?? '',
             '1',
             $this->orderCountRepository->getByEmail($email),
             [],
             $this->totalSpendRepository->getByEmail($email)
+        );
+    }
+
+    private function getLocale(Order $order): string
+    {
+        $store = $order->getStore();
+
+        return $this->scopeConfig->getValue(
+            self::LOCALE_CONFIG_PATH, ScopeInterface::SCOPE_STORE, $store->getId()
         );
     }
 }
