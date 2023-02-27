@@ -2,7 +2,6 @@
 
 namespace PennyBlack\App\Provider;
 
-
 use Magento\Newsletter\Model\ResourceModel\Subscriber;
 use Magento\Store\Model\StoreManagerInterface;
 
