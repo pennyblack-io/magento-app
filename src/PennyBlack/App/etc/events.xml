@@ -3,7 +3,7 @@
     <event name="admin_system_config_changed_section_pennyblack">
         <observer name="pennyblack_config_save_observer" instance="PennyBlack\App\Observer\ConfigSaveObserver" />
     </event>
-    <event name="sales_order_save_after">
+    <event name="checkout_submit_all_after">
         <observer name="pennyblack_order_save_after_observer" instance="PennyBlack\App\Observer\OrderSaveAfterObserver" />
     </event>
 </config>

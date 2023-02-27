@@ -70,7 +70,9 @@ class CustomerMapper
         $store = $order->getStore();
 
         return $this->scopeConfig->getValue(
-            self::LOCALE_CONFIG_PATH, ScopeInterface::SCOPE_STORE, $store->getId()
+            self::LOCALE_CONFIG_PATH,
+            ScopeInterface::SCOPE_STORE,
+            $store->getId()
         );
     }
 }
