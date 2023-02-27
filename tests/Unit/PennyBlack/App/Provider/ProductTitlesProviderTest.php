@@ -1,6 +1,6 @@
 <?php
 
-namespace PennyBlack\PennyBlack\tests\Unit\PennyBlack\App\Provider;
+namespace PennyBlack\App\Test\Unit\Provider;
 
 use Magento\Sales\Model\Order;
 use PennyBlack\App\Provider\ProductTitlesProvider;

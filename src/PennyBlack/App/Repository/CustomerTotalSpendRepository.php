@@ -24,6 +24,6 @@ class CustomerTotalSpendRepository
 
         $query = $connection->query($sql, ['email' => $email]);
 
-        return (float) $query->fetch();
+        return (float) $query->fetch()['customer_total'];
     }
 }

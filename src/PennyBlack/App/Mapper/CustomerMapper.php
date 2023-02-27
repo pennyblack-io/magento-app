@@ -5,6 +5,8 @@ namespace PennyBlack\App\Mapper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\ScopeInterface;
+use PennyBlack\App\Provider\CustomerGroupProvider;
+use PennyBlack\App\Provider\NewsletterSubscribedProvider;
 use PennyBlack\App\Repository\CustomerOrderCountRepository;
 use PennyBlack\App\Repository\CustomerTotalSpendRepository;
 use PennyBlack\Model\Customer as PennyBlackCustomer;
@@ -16,40 +18,54 @@ class CustomerMapper
     private ScopeConfigInterface $scopeConfig;
     private CustomerOrderCountRepository $orderCountRepository;
     private CustomerTotalSpendRepository $totalSpendRepository;
+    private CustomerGroupProvider $customerGroupProvider;
+    private NewsletterSubscribedProvider $newsletterSubscribedProvider;
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
         CustomerOrderCountRepository $orderCountRepository,
-        CustomerTotalSpendRepository $totalSpendRepository
+        CustomerTotalSpendRepository $totalSpendRepository,
+        CustomerGroupProvider $customerGroupProvider,
+        NewsletterSubscribedProvider $newsletterSubscribedProvider
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->orderCountRepository = $orderCountRepository;
         $this->totalSpendRepository = $totalSpendRepository;
+        $this->customerGroupProvider = $customerGroupProvider;
+        $this->newsletterSubscribedProvider = $newsletterSubscribedProvider;
     }
 
     public function map(Order $order): PennyBlackCustomer
     {
-        // If customer is a guest this is null, but we can get details from the billing address.
-        // @TODO Check if this is an instance of Data/Customer!
-        $customer = $order->getCustomer();
-        $billingAddress = $order->getBillingAddress();
-
-        $email = $customer ? $customer->getEmail() : $billingAddress->getEmail();
+        $shippingAddress = $order->getShippingAddress();
+        $email = $shippingAddress->getEmail();
+        $customerGroup = $this->customerGroupProvider->getFromOrder($order);
 
         return PennyBlackCustomer::fromValues(
-            $customer ? $customer->getId() : null,
-            $customer ? $customer->getFirstName() : $billingAddress->getFirstname(),
-            $customer ? $customer->getLastname() : $billingAddress->getLastName(),
+            $order->getCustomerId(),
+            $shippingAddress->getFirstname(),
+            $shippingAddress->getLastName(),
             $email,
             $this->getLocale($order) ?? '',
-            '1',
+            $this->isMarketingSubscribed($order),
             $this->orderCountRepository->getByEmail($email),
-            [],
+            $customerGroup ? [$customerGroup->getCode()] : [],
             $this->totalSpendRepository->getByEmail($email)
         );
     }
 
-    private function getLocale(Order $order): string
+    private function isMarketingSubscribed(Order $order): string
+    {
+        if ((bool) $order->getCustomerIsGuest()) {
+            return '0';
+        }
+
+        return $this->newsletterSubscribedProvider->isSubscribed(
+            $order->getCustomerId()
+        );
+    }
+
+    private function getLocale(Order $order): ?string
     {
         $store = $order->getStore();
 
