@@ -13,4 +13,62 @@
             <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
         </arguments>
     </type>
+
+    <type name="PennyBlack\App\Provider\CustomerGroupProvider">
+        <arguments>
+            <argument name="groupRepository" xsi:type="object">Magento\Customer\Api\GroupRepositoryInterface</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Repository\NewsletterSubscribedRepository">
+        <arguments>
+            <argument name="resourceConnection" xsi:type="object">Magento\Framework\App\ResourceConnection</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Repository\CustomerOrderCountRepository">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\CollectionFactoryInterface</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Repository\CustomerTotalSpendRepository">
+        <arguments>
+            <argument name="resourceConnection" xsi:type="object">Magento\Framework\App\ResourceConnection</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Mapper\CustomerMapper">
+        <arguments>
+            <argument name="scopeConfig" xsi:type="object">Magento\Framework\App\Config\ScopeConfigInterface</argument>
+            <argument name="orderCountRepository" xsi:type="object">PennyBlack\App\Repository\CustomerOrderCountRepository</argument>
+            <argument name="totalSpendRepository" xsi:type="object">PennyBlack\App\Repository\CustomerTotalSpendRepository</argument>
+            <argument name="customerGroupProvider" xsi:type="object">PennyBlack\App\Provider\CustomerGroupProvider</argument>
+            <argument name="newsletterSubscribedRepository" xsi:type="object">PennyBlack\App\Repository\NewsletterSubscribedRepository</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Mapper\OrderDetailsMapper">
+        <arguments>
+            <argument name="skusProvider" xsi:type="object">PennyBlack\App\Provider\SkusProvider</argument>
+            <argument name="productTitlesProvider" xsi:type="object">PennyBlack\App\Provider\ProductTitlesProvider</argument>
+            <argument name="orderGiftMessageRepository" xsi:type="object">Magento\GiftMessage\Model\OrderRepository</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Mapper\OrderMapper">
+        <arguments>
+            <argument name="customerMapper" xsi:type="object">PennyBlack\App\Mapper\CustomerMapper</argument>
+            <argument name="orderDetailsMapper" xsi:type="object">PennyBlack\App\Mapper\OrderDetailsMapper</argument>
+        </arguments>
+    </type>
+
+    <type name="PennyBlack\App\Observer\OrderSaveAfterObserver">
+        <arguments>
+            <argument name="client" xsi:type="object">PennyBlack\App\ApiConnector\Client</argument>
+            <argument name="orderMapper" xsi:type="object">PennyBlack\App\Mapper\OrderMapper</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
 </config>

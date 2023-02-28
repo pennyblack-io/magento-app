@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "be89648d48053f4f027a9e1836abf4f2",
+    "content-hash": "9b611c7f1a990ecfa27012895b03c42d",
     "packages": [
         {
             "name": "brick/math",
@@ -4673,16 +4673,16 @@
         },
         {
             "name": "pennyblack/php-api-client",
-            "version": "0.1.0",
+            "version": "0.1.2",
             "source": {
                 "type": "git",
                 "url": "git@github.com:pennyblack-io/php-api-client.git",
-                "reference": "11233d19ff7bb3938eaf0193e6462db585649167"
+                "reference": "4066abac1999783d275d4d0a8212b60446c9be52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pennyblack-io/php-api-client/zipball/11233d19ff7bb3938eaf0193e6462db585649167",
-                "reference": "11233d19ff7bb3938eaf0193e6462db585649167",
+                "url": "https://api.github.com/repos/pennyblack-io/php-api-client/zipball/4066abac1999783d275d4d0a8212b60446c9be52",
+                "reference": "4066abac1999783d275d4d0a8212b60446c9be52",
                 "shasum": ""
             },
             "require": {
@@ -4692,8 +4692,8 @@
             },
             "require-dev": {
                 "phpmd/phpmd": "^2.13",
-                "phpstan/phpstan": "1.9.2",
-                "phpunit/phpunit": "9.5.26",
+                "phpstan/phpstan": "1.10.2",
+                "phpunit/phpunit": "9.6.3",
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
@@ -4729,10 +4729,10 @@
             ],
             "description": "PennyBlack PHP API Client",
             "support": {
-                "source": "https://github.com/pennyblack-io/php-api-client/tree/0.1.0",
+                "source": "https://github.com/pennyblack-io/php-api-client/tree/0.1.2",
                 "issues": "https://github.com/pennyblack-io/php-api-client/issues"
             },
-            "time": "2023-02-20T14:04:38+00:00"
+            "time": "2023-02-27T15:21:17+00:00"
         },
         {
             "name": "psr/container",
