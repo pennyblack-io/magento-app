@@ -8,11 +8,6 @@ class SkusProvider
 {
     public function get(Order $order): array
     {
-        $skus = [];
-        foreach ($order->getItems() as $item) {
-            $skus[] = $item->getSku();
-        }
-
-        return $skus;
+        return array_map(fn($item): string => $item->getSku(), $order->getItems());
     }
 }

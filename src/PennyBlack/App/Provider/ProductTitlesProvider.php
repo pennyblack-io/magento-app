@@ -8,11 +8,6 @@ class ProductTitlesProvider
 {
     public function get(Order $order): array
     {
-        $titles = [];
-        foreach ($order->getItems() as $item) {
-            $titles[] = $item->getName();
-        }
-
-        return $titles;
+        return array_map(fn($item): string => $item->getName(), $order->getItems());
     }
 }

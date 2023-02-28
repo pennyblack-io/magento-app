@@ -30,7 +30,7 @@ class OrderSaveAfterObserver implements ObserverInterface
         /** @var Order|null $order */
         $order = $observer->getData('order');
         if ($order === null) {
-            $this->logger->error('Unable to send order information to PennyBlack, order not found in event.');
+            $this->logger->error('Unable to send order information to Penny Black, order not found in event.');
 
             return;
         }

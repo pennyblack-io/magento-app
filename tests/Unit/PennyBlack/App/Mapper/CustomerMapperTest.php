@@ -9,9 +9,9 @@ use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\Store;
 use PennyBlack\App\Mapper\CustomerMapper;
 use PennyBlack\App\Provider\CustomerGroupProvider;
-use PennyBlack\App\Provider\NewsletterSubscribedProvider;
 use PennyBlack\App\Repository\CustomerOrderCountRepository;
 use PennyBlack\App\Repository\CustomerTotalSpendRepository;
+use PennyBlack\App\Repository\NewsletterSubscribedRepository;
 use PennyBlack\Model\Customer as PennyBlackCustomer;
 use PHPUnit\Framework\TestCase;
 
@@ -21,7 +21,7 @@ class CustomerMapperTest extends TestCase
     private $mockOrderCountRepository;
     private $mockTotalSpendRepository;
     private $mockCustomerGroupProvider;
-    private $mockNewsletterSubscribedProvider;
+    private $mockNewsletterSubscribedRepository;
 
     private $mockOrder;
     private $mockShippingAddress;
@@ -31,7 +31,9 @@ class CustomerMapperTest extends TestCase
         $this->mockOrderCountRepository = $this->createMock(CustomerOrderCountRepository::class);
         $this->mockTotalSpendRepository = $this->createMock(CustomerTotalSpendRepository::class);
         $this->mockCustomerGroupProvider = $this->createMock(CustomerGroupProvider::class);
-        $this->mockNewsletterSubscribedProvider = $this->createMock(NewsletterSubscribedProvider::class);
+        $this->mockNewsletterSubscribedRepository = $this->createMock(
+            NewsletterSubscribedRepository::class
+        );
 
         $this->mockOrderCountRepository->method('getByEmail')->willReturn(21);
         $this->mockTotalSpendRepository->method('getByEmail')->willReturn(462.76);
@@ -40,6 +42,9 @@ class CustomerMapperTest extends TestCase
         $mockStore->method('getId')->willReturn(1);
 
         $this->mockShippingAddress = $this->createMock(OrderAddressInterface::class);
+        $this->mockShippingAddress->method('getEmail')->willReturn('tim@apple.com');
+        $this->mockShippingAddress->method('getFirstname')->willReturn('Tim');
+        $this->mockShippingAddress->method('getLastname')->willReturn('Apple');
 
         $this->mockOrder = $this->createMock(Order::class);
         $this->mockOrder->method('getStore')->willReturn($mockStore);
@@ -53,19 +58,16 @@ class CustomerMapperTest extends TestCase
             ->with('general/locale/code', ScopeInterface::SCOPE_STORE, 1)
             ->willReturn('en_EN');
 
-        $this->mockNewsletterSubscribedProvider->method('isSubscribed')->willReturn("1");
+        $this->mockNewsletterSubscribedRepository->method('isSubscribedInStore')->willReturn(true);
 
         $this->mockOrder->method('getCustomerId')->willReturn(1);
-        $this->mockShippingAddress->method('getEmail')->willReturn('tim@apple.com');
-        $this->mockShippingAddress->method('getFirstname')->willReturn('Tim');
-        $this->mockShippingAddress->method('getLastname')->willReturn('Apple');
 
         $mapper = new CustomerMapper(
             $this->mockConfig,
             $this->mockOrderCountRepository,
             $this->mockTotalSpendRepository,
             $this->mockCustomerGroupProvider,
-            $this->mockNewsletterSubscribedProvider
+            $this->mockNewsletterSubscribedRepository
         );
 
         $exp = PennyBlackCustomer::fromValues(
@@ -74,7 +76,7 @@ class CustomerMapperTest extends TestCase
             'Apple',
             'tim@apple.com',
             'en_EN',
-            '1',
+            true,
             21,
             [],
             462.76
@@ -90,18 +92,18 @@ class CustomerMapperTest extends TestCase
             ->with('general/locale/code', ScopeInterface::SCOPE_STORE, 1)
             ->willReturn('en_EN');
 
+        $this->mockNewsletterSubscribedRepository->expects($this->exactly(0))
+            ->method('isSubscribedInStore');
+
         $this->mockOrder->method('getCustomerId')->willReturn(null);
         $this->mockOrder->method('getCustomerIsGuest')->willReturn("1");
-        $this->mockShippingAddress->method('getEmail')->willReturn('tim@apple.com');
-        $this->mockShippingAddress->method('getFirstname')->willReturn('Tim');
-        $this->mockShippingAddress->method('getLastname')->willReturn('Apple');
 
         $mapper = new CustomerMapper(
             $this->mockConfig,
             $this->mockOrderCountRepository,
             $this->mockTotalSpendRepository,
             $this->mockCustomerGroupProvider,
-            $this->mockNewsletterSubscribedProvider
+            $this->mockNewsletterSubscribedRepository
         );
 
         $exp = PennyBlackCustomer::fromValues(
@@ -110,7 +112,7 @@ class CustomerMapperTest extends TestCase
             'Apple',
             'tim@apple.com',
             'en_EN',
-            '0',
+            false,
             21,
             [],
             462.76
@@ -126,19 +128,17 @@ class CustomerMapperTest extends TestCase
             ->with('general/locale/code', ScopeInterface::SCOPE_STORE, 1)
             ->willReturn(null);
 
-        $this->mockNewsletterSubscribedProvider->method('isSubscribed')->willReturn("1");
+        $this->mockNewsletterSubscribedRepository->method('isSubscribedInStore')->willReturn(true);
 
         $this->mockOrder->method('getCustomerId')->willReturn(1);
-        $this->mockShippingAddress->method('getEmail')->willReturn('tim@apple.com');
-        $this->mockShippingAddress->method('getFirstname')->willReturn('Tim');
-        $this->mockShippingAddress->method('getLastname')->willReturn('Apple');
+
 
         $mapper = new CustomerMapper(
             $this->mockConfig,
             $this->mockOrderCountRepository,
             $this->mockTotalSpendRepository,
             $this->mockCustomerGroupProvider,
-            $this->mockNewsletterSubscribedProvider
+            $this->mockNewsletterSubscribedRepository
         );
 
         $exp = PennyBlackCustomer::fromValues(
@@ -147,7 +147,7 @@ class CustomerMapperTest extends TestCase
             'Apple',
             'tim@apple.com',
             '',
-            '1',
+            true,
             21,
             [],
             462.76

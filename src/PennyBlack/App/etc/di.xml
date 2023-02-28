@@ -21,10 +21,9 @@
         </arguments>
     </type>
 
-    <type name="PennyBlack\App\Provider\NewsletterSubscribedProvider">
+    <type name="PennyBlack\App\Repository\NewsletterSubscribedRepository">
         <arguments>
-            <argument name="subscriber" xsi:type="object">Magento\Newsletter\Model\ResourceModel\Subscriber</argument>
-            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</argument>
+            <argument name="resourceConnection" xsi:type="object">Magento\Framework\App\ResourceConnection</argument>
         </arguments>
     </type>
 
@@ -46,7 +45,7 @@
             <argument name="orderCountRepository" xsi:type="object">PennyBlack\App\Repository\CustomerOrderCountRepository</argument>
             <argument name="totalSpendRepository" xsi:type="object">PennyBlack\App\Repository\CustomerTotalSpendRepository</argument>
             <argument name="customerGroupProvider" xsi:type="object">PennyBlack\App\Provider\CustomerGroupProvider</argument>
-            <argument name="newsletterSubscribedProvider" xsi:type="object">PennyBlack\App\Provider\NewsletterSubscribedProvider</argument>
+            <argument name="newsletterSubscribedRepository" xsi:type="object">PennyBlack\App\Repository\NewsletterSubscribedRepository</argument>
         </arguments>
     </type>
 
