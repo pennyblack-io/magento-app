@@ -17,10 +17,7 @@ class CustomerTotalSpendRepository
     {
         $connection = $this->resourceConnection->getConnection();
 
-        $sql = sprintf(
-            'SELECT SUM(o.grand_total) AS customer_total FROM %s o WHERE o.customer_email = :email;',
-            'sales_order',
-        );
+        $sql = 'SELECT SUM(o.grand_total) AS customer_total FROM sales_order o WHERE o.customer_email = :email;';
 
         $query = $connection->query($sql, ['email' => $email]);
 

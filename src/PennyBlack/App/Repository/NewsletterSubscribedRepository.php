@@ -18,10 +18,8 @@ class NewsletterSubscribedRepository
     {
         $connection = $this->resourceConnection->getConnection();
 
-        $sql = sprintf(
-            'SELECT subscriber_status FROM %s n WHERE n.customer_id = :customer_id AND n.store_id = :store_id;',
-            'newsletter_subscriber',
-        );
+        $sql = 'SELECT subscriber_status FROM newsletter_subscriber n
+                WHERE n.customer_id = :customer_id AND n.store_id = :store_id;';
 
         $query = $connection->query($sql, [
             'customer_id' => $customerId,
