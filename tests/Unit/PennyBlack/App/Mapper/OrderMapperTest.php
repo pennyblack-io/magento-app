@@ -23,6 +23,8 @@ class OrderMapperTest extends TestCase
     private $mockGiftMessageRepository;
 
     private $mockOrder;
+    private $mockBillingAddress;
+    private $mockShippingAddress;
 
     public function setUp(): void
     {
@@ -33,15 +35,15 @@ class OrderMapperTest extends TestCase
         $this->mockSkusProvider->method('get')->willReturn(['WB004']);
         $this->mockProductTitlesProvider->method('get')->willReturn(['Shoulder bag']);
 
-        $mockBillingAddress = $this->createMock(OrderAddressInterface::class);
-        $mockBillingAddress->method('getCountryId')->willReturn('GB');
-        $mockBillingAddress->method('getPostcode')->willReturn('SE1 3JW');
-        $mockBillingAddress->method('getCity')->willReturn('London');
+        $this->mockBillingAddress = $this->createMock(OrderAddressInterface::class);
+        $this->mockBillingAddress->method('getCountryId')->willReturn('GB');
+        $this->mockBillingAddress->method('getPostcode')->willReturn('SE1 3JW');
+        $this->mockBillingAddress->method('getCity')->willReturn('London');
 
-        $mockShippingAddress = $this->createMock(OrderAddressInterface::class);
-        $mockShippingAddress->method('getCountryId')->willReturn('GB');
-        $mockShippingAddress->method('getPostcode')->willReturn('SE1 3JW');
-        $mockShippingAddress->method('getCity')->willReturn('London');
+        $this->mockShippingAddress = $this->createMock(OrderAddressInterface::class);
+        $this->mockShippingAddress->method('getCountryId')->willReturn('GB');
+        $this->mockShippingAddress->method('getPostcode')->willReturn('SE1 3JW');
+        $this->mockShippingAddress->method('getCity')->willReturn('London');
 
         $mockCurrency = $this->createMock(Currency::class);
         $mockCurrency->method('getCurrencyCode')->willReturn('GBP');
@@ -50,8 +52,6 @@ class OrderMapperTest extends TestCase
         $mockOrderItem = $this->createMock(Order\Item::class);
 
         $this->mockOrder->method('getId')->willReturn(1);
-        $this->mockOrder->method('getBillingAddress')->willReturn($mockBillingAddress);
-        $this->mockOrder->method('getShippingAddress')->willReturn($mockShippingAddress);
         $this->mockOrder->method('getIncrementId')->willReturn('0000001');
         $this->mockOrder->method('getBaseGrandTotal')->willReturn(55.99);
         $this->mockOrder->method('getItems')->willReturn([$mockOrderItem]);
@@ -65,6 +65,9 @@ class OrderMapperTest extends TestCase
         $mockGiftMessage = $this->createMock(MessageInterface::class);
         $mockGiftMessage->method('getMessage')->willReturn('A lovely gift message');
         $this->mockGiftMessageRepository->method('get')->with(1)->willReturn($mockGiftMessage);
+
+        $this->mockOrder->method('getBillingAddress')->willReturn($this->mockBillingAddress);
+        $this->mockOrder->method('getShippingAddress')->willReturn($this->mockShippingAddress);
 
         $mapper = new OrderMapper(
             $this->mockSkusProvider,
@@ -100,6 +103,9 @@ class OrderMapperTest extends TestCase
         $this->mockGiftMessageRepository->method('get')->with(1)
             ->willThrowException(new NoSuchEntityException(new Phrase("oops")));
 
+        $this->mockOrder->method('getBillingAddress')->willReturn($this->mockBillingAddress);
+        $this->mockOrder->method('getShippingAddress')->willReturn($this->mockShippingAddress);
+
         $mapper = new OrderMapper(
             $this->mockSkusProvider,
             $this->mockProductTitlesProvider,
@@ -120,6 +126,72 @@ class OrderMapperTest extends TestCase
             ->setShippingCity('London')
             ->setShippingPostcode('SE1 3JW')
             ->setSkus(['WB004'])
+            ->setProductTitles(['Shoulder bag'])
+            ->setPromoCodes(['10PERCENTOFF']);
+
+        $this->assertEquals($exp->toArray(), $mapper->map($this->mockOrder)->toArray());
+    }
+
+    public function testItMapsOrderDataToPennyBlackOrderDetailsWithNoBillingAddress()
+    {
+        $mockGiftMessage = $this->createMock(MessageInterface::class);
+        $mockGiftMessage->method('getMessage')->willReturn('A lovely gift message');
+        $this->mockGiftMessageRepository->method('get')->with(1)->willReturn($mockGiftMessage);
+
+        $this->mockOrder->method('getBillingAddress')->willReturn(null);
+        $this->mockOrder->method('getShippingAddress')->willReturn($this->mockShippingAddress);
+
+        $mapper = new OrderMapper(
+            $this->mockSkusProvider,
+            $this->mockProductTitlesProvider,
+            $this->mockGiftMessageRepository
+        );
+
+        $exp = (new PennyBlackOrder())
+            ->setId(1)
+            ->setNumber('0000001')
+            ->setCreatedAt(DateTime::createFromFormat('Y-m-d H:i:s', '2023-02-27 10:49:25'))
+            ->setCurrency('GBP')
+            ->setTotalAmount(55.99)
+            ->setTotalItems(1)
+            ->setShippingCountry('GB')
+            ->setShippingCity('London')
+            ->setShippingPostcode('SE1 3JW')
+            ->setSkus(['WB004'])
+            ->setGiftMessage('A lovely gift message')
+            ->setProductTitles(['Shoulder bag'])
+            ->setPromoCodes(['10PERCENTOFF']);
+
+        $this->assertEquals($exp->toArray(), $mapper->map($this->mockOrder)->toArray());
+    }
+
+    public function testItMapsOrderDataToPennyBlackOrderDetailsWithNoShippingAddress()
+    {
+        $mockGiftMessage = $this->createMock(MessageInterface::class);
+        $mockGiftMessage->method('getMessage')->willReturn('A lovely gift message');
+        $this->mockGiftMessageRepository->method('get')->with(1)->willReturn($mockGiftMessage);
+
+        $this->mockOrder->method('getBillingAddress')->willReturn($this->mockBillingAddress);
+        $this->mockOrder->method('getShippingAddress')->willReturn(null);
+
+        $mapper = new OrderMapper(
+            $this->mockSkusProvider,
+            $this->mockProductTitlesProvider,
+            $this->mockGiftMessageRepository
+        );
+
+        $exp = (new PennyBlackOrder())
+            ->setId(1)
+            ->setNumber('0000001')
+            ->setCreatedAt(DateTime::createFromFormat('Y-m-d H:i:s', '2023-02-27 10:49:25'))
+            ->setCurrency('GBP')
+            ->setTotalAmount(55.99)
+            ->setTotalItems(1)
+            ->setBillingCountry('GB')
+            ->setBillingCity('London')
+            ->setBillingPostcode('SE1 3JW')
+            ->setSkus(['WB004'])
+            ->setGiftMessage('A lovely gift message')
             ->setProductTitles(['Shoulder bag'])
             ->setPromoCodes(['10PERCENTOFF']);
 

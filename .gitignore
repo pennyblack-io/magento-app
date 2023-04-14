@@ -1,3 +1,4 @@
 /vendor
 /bin
 /auth.json
+/.phpunit.result.cache
