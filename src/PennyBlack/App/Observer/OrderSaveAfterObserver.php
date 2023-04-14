@@ -7,6 +7,7 @@ use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 use PennyBlack\App\ApiConnector\Client;
+use PennyBlack\App\Mapper\CustomerMapper;
 use PennyBlack\App\Mapper\OrderMapper;
 use Psr\Log\LoggerInterface;
 
@@ -16,12 +17,18 @@ class OrderSaveAfterObserver implements ObserverInterface
 
     private Client $client;
     private OrderMapper $orderMapper;
+    private CustomerMapper $customerMapper;
     private LoggerInterface $logger;
 
-    public function __construct(Client $client, OrderMapper $orderMapper, LoggerInterface $logger)
-    {
+    public function __construct(
+        Client $client,
+        OrderMapper $orderMapper,
+        CustomerMapper $customerMapper,
+        LoggerInterface $logger
+    ) {
         $this->client = $client;
         $this->orderMapper = $orderMapper;
+        $this->customerMapper = $customerMapper;
         $this->logger = $logger;
     }
 
@@ -38,7 +45,11 @@ class OrderSaveAfterObserver implements ObserverInterface
         try {
             $client = $this->client->getApiClient();
 
-            $client->sendOrder($this->orderMapper->map($order), self::ORIGIN_MAGENTO);
+            $client->sendOrder(
+                $this->orderMapper->map($order),
+                $this->customerMapper->map($order),
+                self::ORIGIN_MAGENTO
+            );
         } catch (Exception $e) {
             $this->logger->error($e->getMessage());
         }
