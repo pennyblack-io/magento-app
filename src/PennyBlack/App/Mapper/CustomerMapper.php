@@ -76,10 +76,12 @@ class CustomerMapper
 
     private function getLocale(Store $store): string
     {
-        return $this->scopeConfig->getValue(
+        $localeCode = $this->scopeConfig->getValue(
             self::LOCALE_CONFIG_PATH,
             ScopeInterface::SCOPE_STORE,
             $store->getId()
         ) ?? '';
+
+        return strstr($localeCode, '_', true);
     }
 }
