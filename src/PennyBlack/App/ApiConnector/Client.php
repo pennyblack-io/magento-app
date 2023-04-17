@@ -2,6 +2,7 @@
 
 namespace PennyBlack\App\ApiConnector;
 
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\HttpFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use PennyBlack\Api as PennyBlackApiClient;
@@ -31,7 +32,7 @@ class Client
             throw new MissingApiConfigException('Cannot instantiate PennyBlack API, required config not set.');
         }
 
-        $client = new \GuzzleHttp\Client();
+        $client = new GuzzleClient();
         $streamFactory = new HttpFactory();
         $requestFactory = new HttpFactory();
 

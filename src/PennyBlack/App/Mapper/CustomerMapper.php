@@ -48,7 +48,7 @@ class CustomerMapper
             ->setFirstName($shippingAddress->getFirstname())
             ->setLastName($shippingAddress->getLastname())
             ->setEmail($email)
-            ->setLanguage($this->getLocale($store))
+            ->setLanguage($this->getLanguage($store))
             ->setMarketingConsent($this->isMarketingSubscribed($order, $store))
             ->setTotalOrders($this->orderCountRepository->getByEmail($email))
             ->setTags($customerGroup ? [$customerGroup->getCode()] : [])
@@ -74,7 +74,7 @@ class CustomerMapper
         );
     }
 
-    private function getLocale(Store $store): string
+    private function getLanguage(Store $store): string
     {
         $localeCode = $this->scopeConfig->getValue(
             self::LOCALE_CONFIG_PATH,
