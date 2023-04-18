@@ -35,7 +35,7 @@ class ConfigSaveObserver implements ObserverInterface
                 $store = $this->storeManager->getStore();
                 $client = $this->client->getApiClient();
 
-                $client->install($store->getBaseUrl());
+                $client->installStore($store->getBaseUrl());
             } catch (Exception $e) {
                 $this->logger->error($e->getMessage());
             }

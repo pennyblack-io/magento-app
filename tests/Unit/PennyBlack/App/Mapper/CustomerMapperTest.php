@@ -12,7 +12,7 @@ use PennyBlack\App\Provider\CustomerGroupProvider;
 use PennyBlack\App\Repository\CustomerOrderCountRepository;
 use PennyBlack\App\Repository\CustomerTotalSpendRepository;
 use PennyBlack\App\Repository\NewsletterSubscribedRepository;
-use PennyBlack\Model\Customer as PennyBlackCustomer;
+use PennyBlack\Model\Customer;
 use PHPUnit\Framework\TestCase;
 
 class CustomerMapperTest extends TestCase
@@ -70,17 +70,16 @@ class CustomerMapperTest extends TestCase
             $this->mockNewsletterSubscribedRepository
         );
 
-        $exp = PennyBlackCustomer::fromValues(
-            1,
-            'Tim',
-            'Apple',
-            'tim@apple.com',
-            'en_EN',
-            true,
-            21,
-            [],
-            462.76
-        );
+        $exp = (new Customer())
+            ->setVendorCustomerId(1)
+            ->setFirstName('Tim')
+            ->setLastName('Apple')
+            ->setEmail('tim@apple.com')
+            ->setLanguage('en')
+            ->setMarketingConsent(true)
+            ->setTotalOrders(21)
+            ->setTags([])
+            ->setTotalSpent(462.76);
 
         $this->assertEquals($exp->toArray(), $mapper->map($this->mockOrder)->toArray());
     }
@@ -106,17 +105,15 @@ class CustomerMapperTest extends TestCase
             $this->mockNewsletterSubscribedRepository
         );
 
-        $exp = PennyBlackCustomer::fromValues(
-            null,
-            'Tim',
-            'Apple',
-            'tim@apple.com',
-            'en_EN',
-            false,
-            21,
-            [],
-            462.76
-        );
+        $exp = (new Customer())
+            ->setFirstName('Tim')
+            ->setLastName('Apple')
+            ->setEmail('tim@apple.com')
+            ->setLanguage('en')
+            ->setMarketingConsent(false)
+            ->setTotalOrders(21)
+            ->setTags([])
+            ->setTotalSpent(462.76);
 
         $this->assertEquals($exp->toArray(), $mapper->map($this->mockOrder)->toArray());
     }
@@ -141,17 +138,16 @@ class CustomerMapperTest extends TestCase
             $this->mockNewsletterSubscribedRepository
         );
 
-        $exp = PennyBlackCustomer::fromValues(
-            1,
-            'Tim',
-            'Apple',
-            'tim@apple.com',
-            '',
-            true,
-            21,
-            [],
-            462.76
-        );
+        $exp = (new Customer())
+            ->setVendorCustomerId(1)
+            ->setFirstName('Tim')
+            ->setLastName('Apple')
+            ->setEmail('tim@apple.com')
+            ->setLanguage('')
+            ->setMarketingConsent(true)
+            ->setTotalOrders(21)
+            ->setTags([])
+            ->setTotalSpent(462.76);
 
         $this->assertEquals($exp->toArray(), $mapper->map($this->mockOrder)->toArray());
     }

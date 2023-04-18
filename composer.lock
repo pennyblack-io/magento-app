@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9b611c7f1a990ecfa27012895b03c42d",
+    "content-hash": "250c12d090c2a64eaf11c81d06058630",
     "packages": [
         {
             "name": "brick/math",
@@ -4672,28 +4672,33 @@
             "time": "2023-02-06T13:44:46+00:00"
         },
         {
-            "name": "pennyblack/php-api-client",
-            "version": "0.1.2",
+            "name": "pennyblack/php-sdk",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:pennyblack-io/php-api-client.git",
-                "reference": "4066abac1999783d275d4d0a8212b60446c9be52"
+                "url": "https://github.com/pennyblack-io/php-sdk.git",
+                "reference": "27780e4aa5e46804269040b391e74ad99dddafdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pennyblack-io/php-api-client/zipball/4066abac1999783d275d4d0a8212b60446c9be52",
-                "reference": "4066abac1999783d275d4d0a8212b60446c9be52",
+                "url": "https://api.github.com/repos/pennyblack-io/php-sdk/zipball/27780e4aa5e46804269040b391e74ad99dddafdf",
+                "reference": "27780e4aa5e46804269040b391e74ad99dddafdf",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
-                "php": ">=7.4.0"
+                "php": ">=7.4.0",
+                "psr/http-client": "^1.0",
+                "psr/http-client-implementation": "*",
+                "psr/http-factory": "^1.0",
+                "psr/http-factory-implementation": "*"
             },
             "require-dev": {
+                "guzzlehttp/guzzle": "^7.5",
                 "phpmd/phpmd": "^2.13",
-                "phpstan/phpstan": "1.10.2",
-                "phpunit/phpunit": "9.6.3",
+                "phpstan/phpstan": "1.10.9",
+                "phpunit/phpunit": "9.6.6",
                 "squizlabs/php_codesniffer": "^3.7"
             },
             "type": "library",
@@ -4727,12 +4732,12 @@
                     "email": "engineers@pennyblack.io"
                 }
             ],
-            "description": "PennyBlack PHP API Client",
+            "description": "Penny Black PHP SDK",
             "support": {
-                "source": "https://github.com/pennyblack-io/php-api-client/tree/0.1.2",
-                "issues": "https://github.com/pennyblack-io/php-api-client/issues"
+                "source": "https://github.com/pennyblack-io/php-sdk/tree/1.1.0",
+                "issues": "https://github.com/pennyblack-io/php-sdk/issues"
             },
-            "time": "2023-02-27T15:21:17+00:00"
+            "time": "2023-04-03T06:00:25+00:00"
         },
         {
             "name": "psr/container",

@@ -44,7 +44,7 @@ class ConfigSaveObserverTest extends TestCase
         $observer->method('getData')->willReturn(['changed_paths' => 'a/different/config/path']);
 
         $this->mockStoreManager->expects($this->exactly(0))->method('getStore');
-        $mockPennyBlackApi->expects($this->exactly(0))->method('install');
+        $mockPennyBlackApi->expects($this->exactly(0))->method('installStore');
         $this->mockLogger->expects($this->exactly(0))->method('error');
 
         $configSaveObserver->execute($observer);
@@ -61,7 +61,7 @@ class ConfigSaveObserverTest extends TestCase
         $observer->method('getData')->willReturn([]);
 
         $this->mockStoreManager->expects($this->exactly(0))->method('getStore');
-        $mockPennyBlackApi->expects($this->exactly(0))->method('install');
+        $mockPennyBlackApi->expects($this->exactly(0))->method('installStore');
         $this->mockLogger->expects($this->exactly(0))->method('error');
 
         $configSaveObserver->execute($observer);
@@ -73,7 +73,7 @@ class ConfigSaveObserverTest extends TestCase
         $this->mockClient->method('getApiClient')->willReturn($mockPennyBlackApi);
 
         $mockPennyBlackApi->expects($this->once())
-            ->method('install')
+            ->method('installStore')
             ->with('https://my-store.com');
 
         $mockStore = $this->createMock(Store::class);
@@ -96,7 +96,7 @@ class ConfigSaveObserverTest extends TestCase
         $this->mockClient->method('getApiClient')->willReturn($mockPennyBlackApi);
 
         $mockPennyBlackApi->expects($this->exactly(0))
-            ->method('install')
+            ->method('installStore')
             ->with('https://my-store.com');
 
         $mockStore = $this->createMock(Store::class);
@@ -135,7 +135,7 @@ class ConfigSaveObserverTest extends TestCase
     public function testItLogsAnErrorIfInstallRequestFails(): void
     {
         $mockPennyBlackApi = $this->createMock(PennyBlackApi::class);
-        $mockPennyBlackApi->method('install')->willThrowException(new Exception("oops"));
+        $mockPennyBlackApi->method('installStore')->willThrowException(new Exception("oops"));
 
         $this->mockClient->method('getApiClient')->willReturn($mockPennyBlackApi);
 

@@ -10,6 +10,7 @@ use PennyBlack\App\Provider\CustomerGroupProvider;
 use PennyBlack\App\Repository\CustomerOrderCountRepository;
 use PennyBlack\App\Repository\CustomerTotalSpendRepository;
 use PennyBlack\App\Repository\NewsletterSubscribedRepository;
+use PennyBlack\Model\Customer;
 use PennyBlack\Model\Customer as PennyBlackCustomer;
 
 class CustomerMapper
@@ -43,17 +44,22 @@ class CustomerMapper
         $customerGroup = $this->customerGroupProvider->getFromOrder($order);
         $store = $order->getStore();
 
-        return PennyBlackCustomer::fromValues(
-            $order->getCustomerId(),
-            $shippingAddress->getFirstname(),
-            $shippingAddress->getLastName(),
-            $email,
-            $this->getLocale($store),
-            $this->isMarketingSubscribed($order, $store),
-            $this->orderCountRepository->getByEmail($email),
-            $customerGroup ? [$customerGroup->getCode()] : [],
-            $this->totalSpendRepository->getByEmail($email)
-        );
+        $customer = (new Customer())
+            ->setFirstName($shippingAddress->getFirstname())
+            ->setLastName($shippingAddress->getLastname())
+            ->setEmail($email)
+            ->setLanguage($this->getLanguage($store))
+            ->setMarketingConsent($this->isMarketingSubscribed($order, $store))
+            ->setTotalOrders($this->orderCountRepository->getByEmail($email))
+            ->setTags($customerGroup ? [$customerGroup->getCode()] : [])
+            ->setTotalSpent($this->totalSpendRepository->getByEmail($email));
+
+        // Only set customer ID for non-guest orders.
+        if ($customerId = $order->getCustomerId()) {
+            $customer->setVendorCustomerId((string)$customerId);
+        }
+
+        return $customer;
     }
 
     private function isMarketingSubscribed(Order $order, Store $store): bool
@@ -68,12 +74,14 @@ class CustomerMapper
         );
     }
 
-    private function getLocale(Store $store): string
+    private function getLanguage(Store $store): string
     {
-        return $this->scopeConfig->getValue(
+        $localeCode = $this->scopeConfig->getValue(
             self::LOCALE_CONFIG_PATH,
             ScopeInterface::SCOPE_STORE,
             $store->getId()
         ) ?? '';
+
+        return strstr($localeCode, '_', true);
     }
 }
