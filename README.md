@@ -17,21 +17,6 @@ This app has been developed against the 2.4.x version of [Magento Open Source](h
 ### Magento
 
 If you are installing this module into your Magento shop, then you can install via composer.
-
-You will need to add the repository into your repositories array in your `composer.json`:
-
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:pennyblack-io/magento-app.git"
-    }
-  ]
-}
-```
-
-You will then be able to install the app with:
 * `composer require pennyblack/magento-app`
 
 ## Development
