@@ -1,7 +1,6 @@
 {
   "name": "pennyblack/magento-app",
   "description": "Provides integration with Penny Black for Magento2",
-  "version": "0.1.0",
   "type": "magento2-module",
   "authors": [
     {
