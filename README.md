@@ -32,7 +32,7 @@ You will need to add the repository into your repositories array in your `compos
 ```
 
 You will then be able to install the app with:
-* `composer require pennyblack/app`
+* `composer require pennyblack/magento-app`
 
 ## Development
 
