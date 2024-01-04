@@ -20,10 +20,10 @@ jobs:
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
         with:
-          args: --ignore-platform-reqs
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_PUBLIC_KEY }}
           php_version: ${{ matrix.php }}
+          php_extensions: bcmath gd intl xsl
           version: "2.2"
       - run: "composer quality-check"
       - run: "composer unit-test"
