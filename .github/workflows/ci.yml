@@ -17,6 +17,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           extensions: bcmath
+      - run: "php -m"
       - uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
