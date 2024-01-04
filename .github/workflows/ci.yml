@@ -16,8 +16,6 @@ jobs:
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: bcmath
-      - run: "php -m"
       - uses: php-actions/composer@v6
         env:
           COMPOSER_AUTH: ${{ secrets.COMPOSER_AUTH_JSON }}
@@ -25,6 +23,7 @@ jobs:
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_key_pub: ${{ secrets.SSH_PUBLIC_KEY }}
           php_version: ${{ matrix.php }}
+          php_extensions: bcmath
           version: "2.2"
       - run: "composer quality-check"
       - run: "composer unit-test"
