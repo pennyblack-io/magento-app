@@ -41,6 +41,11 @@ class Client
         // the required PSR client interface and, if not, wrap it with an adapter (the user must install the
         // php-http/guzzle6-adapter package in their Magento instance to make this work)
         if (!$client instanceof ClientInterface) {
+            if (!class_exists('Http\Adapter\Guzzle6\Client')) {
+                throw new \RuntimeException(
+                    'It looks like you are using Guzzle 6.x but you have not installed the php-http/guzzle6-adapter package.'
+                );
+            }
             $client = new GuzzleAdapter($client);
         }
 

@@ -13,6 +13,9 @@ This app has been developed against the 2.4.x version of [Magento Open Source](h
 
 * Create an `auth.json` file in the root and configure it with the keys found in the `Magento Account` Lastpass entry.
 * `composer install`
+* If you are using Guzzle 6.x then you will need some additional packages.
+  1. You can check your version of Guzzle using `composer info guzzlehttp/guzzle | grep version`
+  2. If this version is 6.x then run `composer require php-http/guzzle6-adapter guzzlehttp/psr7`
 
 ### Magento
 
