@@ -60,7 +60,7 @@ class OrderMapper
             $order
                 ->setShippingCountry($address->getCountryId())
                 ->setShippingCity($address->getCity())
-                ->setShippingPostcode($address->getPostcode());
+                ->setShippingPostcode($address->getPostcode() ?? ''); // @phpstan-ignore-line
 
             return;
         }
@@ -68,7 +68,7 @@ class OrderMapper
         $order
             ->setBillingCountry($address->getCountryId())
             ->setBillingCity($address->getCity())
-            ->setBillingPostcode($address->getPostcode());
+            ->setBillingPostcode($address->getPostcode() ?? ''); // @phpstan-ignore-line
     }
 
     private function getGiftMessage(Order $order): string

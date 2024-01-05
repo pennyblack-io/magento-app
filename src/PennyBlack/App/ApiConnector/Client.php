@@ -3,10 +3,13 @@
 namespace PennyBlack\App\ApiConnector;
 
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\HttpFactory;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
+use Http\Factory\Guzzle\RequestFactory;
+use Http\Factory\Guzzle\StreamFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use PennyBlack\Api as PennyBlackApiClient;
 use PennyBlack\App\Exception\MissingApiConfigException;
+use Psr\Http\Client\ClientInterface;
 
 class Client
 {
@@ -29,13 +32,24 @@ class Client
         $sandboxMode = $this->scopeConfig->getValue(self::SANDBOX_MODE_CONFIG_PATH);
 
         if ($apiKey === null || $sandboxMode === null) {
-            throw new MissingApiConfigException('Cannot instantiate PennyBlack API, required config not set.');
+            throw new MissingApiConfigException('Cannot instantiate Penny Black API, required config not set.');
         }
 
         $client = new GuzzleClient();
-        $streamFactory = new HttpFactory();
-        $requestFactory = new HttpFactory();
 
-        return new PennyBlackApiClient($client, $requestFactory, $streamFactory, $apiKey, $sandboxMode);
+        // we may be running in a Magento instance that is locked to Guzzle 6.x, so we check if the client implements
+        // the required PSR client interface and, if not, wrap it with an adapter (the user must install the
+        // php-http/guzzle6-adapter package in their Magento instance to make this work)
+        if (!$client instanceof ClientInterface) {
+            if (!class_exists('Http\Adapter\Guzzle6\Client')) {
+                throw new \RuntimeException(
+                    'It looks like you are using Guzzle 6.x but you have not installed the ' .
+                    'php-http/guzzle6-adapter package.'
+                );
+            }
+            $client = new GuzzleAdapter($client);
+        }
+
+        return new PennyBlackApiClient($client, new RequestFactory(), new StreamFactory(), $apiKey, $sandboxMode);
     }
 }
