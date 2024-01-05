@@ -43,7 +43,8 @@ class Client
         if (!$client instanceof ClientInterface) {
             if (!class_exists('Http\Adapter\Guzzle6\Client')) {
                 throw new \RuntimeException(
-                    'It looks like you are using Guzzle 6.x but you have not installed the php-http/guzzle6-adapter package.'
+                    'It looks like you are using Guzzle 6.x but you have not installed the ' .
+                    'php-http/guzzle6-adapter package.'
                 );
             }
             $client = new GuzzleAdapter($client);
