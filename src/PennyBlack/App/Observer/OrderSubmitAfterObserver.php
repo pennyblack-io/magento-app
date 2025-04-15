@@ -11,7 +11,7 @@ use PennyBlack\App\Mapper\CustomerMapper;
 use PennyBlack\App\Mapper\OrderMapper;
 use Psr\Log\LoggerInterface;
 
-class OrderSaveAfterObserver implements ObserverInterface
+class OrderSubmitAfterObserver implements ObserverInterface
 {
     private const ORIGIN_MAGENTO = 'magento';
 
